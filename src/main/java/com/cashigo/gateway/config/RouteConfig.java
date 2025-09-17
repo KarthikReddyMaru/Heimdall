@@ -12,11 +12,13 @@ public class RouteConfig {
     RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder
                 .routes()
-                .route("user",path ->
-                        path
+                .route("user",
+                        path -> path
                                 .path("/user/**")
-                                .filters(filter ->
-                                   filter.rewritePath("", ""))
+                                .filters(
+                                        filter -> filter
+                                                .rewritePath("/user/?(?<segment>.*)", "/${segment}")
+                                )
                                 .uri("http://localhost:8081")
                 )
                 .build();
