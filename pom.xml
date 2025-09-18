@@ -55,6 +55,15 @@
             <version>4.1.124.Final</version> <!-- match your netty version -->
             <classifier>osx-aarch_64</classifier> <!-- or osx-x86_64 for Intel Mac -->
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>annotationProcessor</scope>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>

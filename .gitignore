@@ -1,3 +1,6 @@
+.DS_Store
+src/.DS_Store
+src/main/java/com/cashigo/gateway/TestController.java
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
