@@ -18,6 +18,7 @@ public class RouteConfig {
                                 .filters(
                                         filter -> filter
                                                 .rewritePath("/user/?(?<segment>.*)", "/${segment}")
+                                                .tokenRelay()
                                 )
                                 .uri("http://localhost:8081")
                 )

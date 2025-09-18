@@ -24,7 +24,7 @@ public class ClientConfig {
     @Bean
     ClientRegistration keyCloakClientRegistration() {
         return ClientRegistration
-                .withRegistrationId("keycloak")
+                .withRegistrationId(clientConstants.getClientRegistrationId())
                 .clientId(clientConstants.getClientId())
                 .clientSecret(clientConstants.getClientSecret())
                 .authorizationUri(clientConstants.getAuthorizationUri())

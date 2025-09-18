@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Data
 public class ClientConstants {
 
+    public String clientRegistrationId;
     public String clientId;
     public String clientSecret;
     public String authorizationUri;
