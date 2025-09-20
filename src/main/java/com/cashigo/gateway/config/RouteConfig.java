@@ -22,6 +22,16 @@ public class RouteConfig {
                                 )
                                 .uri("http://localhost:8081")
                 )
+                .route("Expensio",
+                        path -> path
+                                .path("/expensio/**")
+                                .filters(
+                                        filter -> filter
+                                                .rewritePath("/expensio/?(?<segment>.*)", "/${segment}")
+                                                .tokenRelay()
+                                )
+                                .uri("http://localhost:8082")
+                )
                 .build();
     }
 
