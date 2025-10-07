@@ -10,8 +10,14 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
+import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.server.WebFilter;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @EnableWebFluxSecurity
 @Configuration
@@ -28,6 +34,19 @@ public class SecurityConfig {
                                 .pathMatchers("/oauth2/authorization/**").permitAll()
                                 .anyExchange().authenticated()
                 )
+                .cors(corsSpec -> corsSpec.configurationSource(
+                        exchange -> {
+                            CorsConfiguration corsConfiguration = new CorsConfiguration();
+                            corsConfiguration.addAllowedMethod("*");
+                            corsConfiguration.setAllowedHeaders(List.of("X-XSRF-TOKEN", "Content-Type", "Accept"));                            corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
+                            corsConfiguration.setAllowCredentials(true);
+                            return corsConfiguration;
+                        }
+                ))
+                .csrf(csrfSpec -> {
+                    csrfSpec.csrfTokenRepository(cookieServerCsrfTokenRepository());
+                    csrfSpec.csrfTokenRequestHandler(new ServerCsrfTokenRequestAttributeHandler());
+                })
                 .oauth2Login(
                         oauth -> oauth
                                 .authenticationSuccessHandler(successHandler())
@@ -48,8 +67,7 @@ public class SecurityConfig {
         RedirectServerAuthenticationSuccessHandler handler = new RedirectServerAuthenticationSuccessHandler();
         handler.setLocation(
                 UriComponentsBuilder
-                        .fromPath("/expensio/transaction")
-                        .queryParam("pageNum", 0)
+                        .fromUriString("http://localhost:3000")
                         .build()
                         .toUri()
         );
@@ -57,4 +75,22 @@ public class SecurityConfig {
         return handler;
     }
 
+    @Bean
+    CookieServerCsrfTokenRepository cookieServerCsrfTokenRepository() {
+        CookieServerCsrfTokenRepository tokenRepository = new CookieServerCsrfTokenRepository();
+        tokenRepository.setCookieCustomizer(cookieCustomizer -> {
+            cookieCustomizer.httpOnly(false);
+            cookieCustomizer.secure(false);
+            cookieCustomizer.sameSite("Lax");
+        });
+        return tokenRepository;
+    }
+
+    @Bean
+    public WebFilter csrfCookieGeneratingFilter(CookieServerCsrfTokenRepository csrfTokenRepository) {
+        return (exchange, chain) -> csrfTokenRepository.loadToken(exchange)
+                .switchIfEmpty(csrfTokenRepository.generateToken(exchange)
+                        .flatMap(token -> csrfTokenRepository.saveToken(exchange, token).thenReturn(token)))
+                .then(chain.filter(exchange));
+    }
 }
