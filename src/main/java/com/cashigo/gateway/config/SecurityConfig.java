@@ -2,6 +2,7 @@ package com.cashigo.gateway.config;
 
 import com.cashigo.gateway.consts.ClientConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,6 +24,9 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Value("${default.redirect.uri}")
+    private String redirectUri;
 
     private final ClientConstants clientConstants;
 
@@ -67,7 +71,7 @@ public class SecurityConfig {
         RedirectServerAuthenticationSuccessHandler handler = new RedirectServerAuthenticationSuccessHandler();
         handler.setLocation(
                 UriComponentsBuilder
-                        .fromUriString("http://localhost:3000")
+                        .fromUriString(redirectUri)
                         .build()
                         .toUri()
         );
