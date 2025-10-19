@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 @Data
 public class ClientConstants {
 
-    public String clientRegistrationId;
-    public String clientId;
-    public String clientSecret;
-    public String authorizationUri;
-    public String redirectUri;
-    public String tokenUri;
-    public String jwkSetUri;
-    public String userInfoUri;
-    public String userNameAttributeName;
-    public String issuerUri;
+    private String clientRegistrationId;
+    private String clientId;
+    private String clientSecret;
+    private String authorizationUri;
+    private String redirectUri;
+    private String tokenUri;
+    private String jwkSetUri;
+    private String userInfoUri;
+    private String userNameAttributeName;
+    private String issuerUri;
 
 
 }

@@ -33,7 +33,7 @@ public class ClientConfig {
                 .tokenUri(clientConstants.getTokenUri())
                 .jwkSetUri(clientConstants.getJwkSetUri())
                 .userInfoUri(clientConstants.getUserInfoUri())
-                .scope(List.of("offline_access", "openid"))
+                .scope(List.of("openid", "profile", "email"))
                 .userNameAttributeName(clientConstants.getUserNameAttributeName())
                 .issuerUri(clientConstants.getIssuerUri())
                 .build();
