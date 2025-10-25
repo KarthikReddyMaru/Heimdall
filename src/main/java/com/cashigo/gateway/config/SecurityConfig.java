@@ -35,8 +35,12 @@ public class SecurityConfig {
         return http
                 .authorizeExchange(
                         exchange -> exchange
-                                .pathMatchers("/oauth2/authorization/**").permitAll()
-                                .anyExchange().authenticated()
+                                .pathMatchers(
+                                        "/swagger-ui/**",              // All Swagger UI static files
+                                        "/v3/**",                      // Gateway API docs
+                                        "/expensio/v3/api-docs"      // Expensio service API docs
+                                ).permitAll()
+                                .anyExchange().permitAll()
                 )
                 .cors(corsSpec -> corsSpec.configurationSource(
                         exchange -> {
